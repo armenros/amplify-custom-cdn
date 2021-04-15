@@ -1,70 +1,36 @@
-# Getting Started with Create React App
+# Cloudfront CDN for user-uploaded objects/assets WITHOUT cloudfront + s3 "hosting"
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Proposed solution
 
-## Available Scripts
+This should produce a nested stack w/ custom resource(s) that:
+    - Provides an SSL-encrypted CDN endpoint for objects stored by a user in the "storage" s3 bucket of the app (without creating a new bucket)
+    - Enforces authentication at the edge (edge lambda on viewer-request) with a custom lambda
 
-In the project directory, you can run:
+### Open questions:
+1. Do we also need to use signed URLs? If so, can we do this with the edge lambda (or another edge lambda?)
+2. If so, how do we pass that to the CloudFront distribution/to the S3 bucket it's caching
+3. How the heck do I parameterize these cloudformation templates to make them flexible/backend-agnostic (e.g. no hard-coding buckets, cognito pools, etc)
+4. How do we get the cloudfront distribution to always reference the latest "version" of the function?!
+5. Edge lambdas with CloudFront triggers appear to only be supported in US-EAST-1 (but my project is in west-2)
+6. Edge lambdas with CloudFront triggers appear to only support Node 12.x
 
-### `yarn start`
+### Breadcrumbs
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- https://gist.github.com/jed/56b1f58297d374572bc51c59394c7e7f
+- https://github.com/aws-samples/cloudfront-secure-media
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### Steps I took to get this far
 
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- create react app & cd into project
+- amplify init
+- amplify add auth
+- amplify add storage
+- amplify add function (and provide read-only access to S3 bucket + cognito/auth)
+- modify function template to include `edgelambda` service role
+    ```
+    Principal:
+        Service:
+            - lambda.amazonaws.com
+            - edgelambda.amazonaws.com
+    ```
+- add custom resource for cloudfront! (I did this by generating a quick template via `amplify add hosting`)

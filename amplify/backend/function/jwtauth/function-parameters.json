@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "auth": {
+      "testcdn1312a87f": [
+        "read"
+      ]
+    },
+    "storage": {
+      "testappmedia": [
+        "read"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}
