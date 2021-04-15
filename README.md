@@ -6,7 +6,7 @@ This should produce a nested stack w/ custom resource(s) that:
     - Provides an SSL-encrypted CDN endpoint for objects stored by a user in the "storage" s3 bucket of the app (without creating a new bucket)
     - Enforces authentication at the edge (edge lambda on viewer-request) with a custom lambda
 
-### Open questions:
+### Open question/constraints
 1. Do we also need to use signed URLs? If so, can we do this with the edge lambda (or another edge lambda?)
 2. If so, how do we pass that to the CloudFront distribution/to the S3 bucket it's caching
 3. How the heck do I parameterize these cloudformation templates to make them flexible/backend-agnostic (e.g. no hard-coding buckets, cognito pools, etc)
