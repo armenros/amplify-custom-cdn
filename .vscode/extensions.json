@@ -1,0 +1,29 @@
+{
+  "recommendations": [
+    "amazonwebservices.aws-toolkit-vscode",
+    "christian-kohler.npm-intellisense",
+    "coenraads.bracket-pair-colorizer",
+    "dariofuzinato.vue-peek",
+    "dbaeumer.vscode-eslint",
+    "eamodio.gitlens",
+    "eg2.vscode-npm-script",
+    "esbenp.prettier-vscode",
+    "formulahendry.auto-close-tag",
+    "formulahendry.auto-rename-tag",
+    "glen-84.sass-lint",
+    "lacroixdavid1.vscode-format-context-menu",
+    "mrmlnc.vscode-attrs-sorter",
+    "syler.sass-indented",
+    "vscode-icons-team.vscode-icons",
+    "wayou.vscode-todo-highlight",
+    "wix.vscode-import-cost",
+    "octref.vetur",
+    "bierner.emojisense",
+    "roscop.activefileinstatusbar"
+  ],
+  "unwantedRecommendations": [
+    "hookyqr.beautify",
+    "dbaeumer.jshint",
+    "ms-vscode.vscode-typescript-tslint-plugin"
+  ]
+}
